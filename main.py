@@ -1,7 +1,8 @@
 
 from __future__ import annotations
 import numpy as np
-from pieces import *
+from setup import *
+from movement import *
 
 
 class Game:
@@ -10,53 +11,6 @@ class Game:
 
     def over(self: Game) -> bool:
         return False
-
-
-def get_starting_pieces() -> list[Piece]:
-
-    # Create list
-    list_of_pieces: list[Piece] = []
-
-    # Fill the list
-    list_of_pieces.append(CastleBlack())
-    list_of_pieces.append(KnightBlack())
-    list_of_pieces.append(BishopBlack())
-    list_of_pieces.append(QueenBlack())
-    list_of_pieces.append(KingBlack())
-    list_of_pieces.append(BishopBlack())
-    list_of_pieces.append(KnightBlack())
-    list_of_pieces.append(CastleBlack())
-
-    for i in range (8,16):
-        list_of_pieces.append(PawnBlack())
-
-    for i in range (16,24):
-        list_of_pieces.append(Pawn())
-
-    list_of_pieces.append(Castle())
-    list_of_pieces.append(Knight())
-    list_of_pieces.append(Bishop())
-    list_of_pieces.append(Queen())
-    list_of_pieces.append(King())
-    list_of_pieces.append(Bishop())
-    list_of_pieces.append(Knight())
-    list_of_pieces.append(Castle())
-
-    # Set coordinates
-    K = 0
-    for piece in list_of_pieces:
-        Y = int(K%8)
-        X = int((K/8)%8)
-        if (X == 2):
-            X = 6
-        if (X == 3):
-            X = 7
-        piece.coordinates = (X, Y)
-        K+=1
-    
-    # Set piece types
-
-    return list_of_pieces
 
 
 def print_board(board: list[Piece]) -> None:
@@ -83,10 +37,75 @@ def print_board(board: list[Piece]) -> None:
             print (collum, end='')
         print ('|', end='\n')
 
+
+
+def play(turn):
+
+    print_board(game.board)
+
+    if turn == 0:
+        print ('White turn!')
+    else:
+        print ('Blacks turn!')
+
+    print ('Select which piece to move')
+    inputX = MoveNumber ()
+    inputY = MoveLetter ()
+
+    print ("Selected piece", inputX, inputY )
+
+    print ('Select where to move')
+    outputX = MoveNumber ()
+    outputY = MoveLetter ()
+
+    print ("Selected piece", outputX, outputY )
+    SelectPiece(inputX, inputY, outputX, outputY, turn)
+
+    if turn == 0:
+        turn = 1
+    else:
+        turn = 1
+        
+    play(turn)
+
+
+        
+    
+
+def SelectPiece(inputX, inputY, outputX, outputY, turn):
+    Moved = False
+    for piece in game.board:
+        (X,Y) = piece.coordinates
+        # print ('Piece coordinates: ', (X,Y))
+        input = (int(inputX), int(inputY))
+        # print ('input: ', input)
+        output = (int (outputX), int(outputY))
+
+        if (X,Y) == input:
+            piece.coordinates = output
+            if turn == 0:
+                turn = 1
+            else:
+                turn = 0
+            print(piece.coordinates)
+            Moved = True
+            break
+    if Moved == False:
+        print ('There is no piece there, try again!')
+    play(turn)
+
 game = Game()
 
 while not game.over():
-    print_board(game.board)
+    turn = 0
+    print ('Piece coordinates: ')
+    for piece in game.board:
+        print (piece.coordinates)
+
+    play(turn)
+
     break
+
+
 
 
