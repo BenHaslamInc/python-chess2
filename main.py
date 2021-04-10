@@ -1,16 +1,8 @@
-
 from __future__ import annotations
 import numpy as np
 from setup import *
 from movement import *
-
-
-class Game:
-    def __init__(self: Game) -> None:
-        self.board = get_starting_pieces()
-
-    def over(self: Game) -> bool:
-        return False
+from moves import moves
 
 
 def print_board(board: list[Piece]) -> None:
@@ -25,6 +17,12 @@ def print_board(board: list[Piece]) -> None:
     # Display the board
 
     Y_Coordinates = "    A    B    C    D    E    F    G    H  "
+
+    for piece in game.taken_blacks:
+        print (piece.symbol, end='')
+    print ('', end='\n')
+    for piece in game.taken_whites:
+        print (piece.symbol, end='')
 
     print ('', end='\n')
     print (Y_Coordinates, end='\n')
@@ -52,27 +50,25 @@ def play(turn):
     inputX = MoveNumber ()
     inputY = MoveLetter ()
 
-    print ("Selected piece", inputX, inputY )
+    # print ("Selected piece", inputX, inputY )
 
     print ('Select where to move')
     outputX = MoveNumber ()
     outputY = MoveLetter ()
 
-    print ("Selected piece", outputX, outputY )
-    SelectPiece(inputX, inputY, outputX, outputY, turn)
+    # print ("Selected piece", outputX, outputY )
+    SelectPiece(inputX, inputY, outputX, outputY, turn, game)
 
     if turn == 0:
         turn = 1
     else:
-        turn = 1
+        turn = 0
         
     play(turn)
 
 
-        
-    
 
-def SelectPiece(inputX, inputY, outputX, outputY, turn):
+def SelectPiece(inputX, inputY, outputX, outputY, turn, game):
     Moved = False
     for piece in game.board:
         (X,Y) = piece.coordinates
@@ -82,12 +78,27 @@ def SelectPiece(inputX, inputY, outputX, outputY, turn):
         output = (int (outputX), int(outputY))
 
         if (X,Y) == input:
+            
+            Moves = moves(piece, game)
+            if not Moves[outputX][outputY]:
+                print ("That is not a possible move, try again!")
+                play (turn)
+
+            if turn != piece.colour:
+                print ("That is not your piece, try again!")
+                play (turn)
+
+            K  = taken (output, turn, game)
+            if K == 0:
+                play(turn)
+
             piece.coordinates = output
+
             if turn == 0:
                 turn = 1
             else:
                 turn = 0
-            print(piece.coordinates)
+
             Moved = True
             break
     if Moved == False:
@@ -98,9 +109,6 @@ game = Game()
 
 while not game.over():
     turn = 0
-    print ('Piece coordinates: ')
-    for piece in game.board:
-        print (piece.coordinates)
 
     play(turn)
 

@@ -3,10 +3,20 @@ import numpy as np
 from pieces import *
 
 
-def get_starting_pieces() -> list[Piece]:
+
+class Game:
+    def __init__(self: Game) -> None:
+        self.board, self.taken_whites, self.taken_blacks = get_starting_pieces()
+
+    def over(self: Game) -> bool:
+        return False
+
+def get_starting_pieces():
 
     # Create list
     list_of_pieces: list[Piece] = []
+    taken_whites: list[Piece] = []
+    taken_blacks: list[Piece] = []
 
     # Fill the list
     list_of_pieces.append(CastleBlack())
@@ -47,4 +57,4 @@ def get_starting_pieces() -> list[Piece]:
     
     # Set piece types
 
-    return list_of_pieces
+    return list_of_pieces, taken_whites, taken_blacks
