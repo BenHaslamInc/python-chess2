@@ -39,32 +39,36 @@ def print_board(board: list[Piece]) -> None:
 
 def play(turn):
 
-    print_board(game.board)
+    while not game.over():
 
-    if turn == 0:
-        print ('White turn!')
-    else:
-        print ('Blacks turn!')
+        print_board(game.board)
 
-    print ('Select which piece to move')
-    inputX = MoveNumber ()
-    inputY = MoveLetter ()
+        if turn == 0:
+            print ('White turn!')
+        else:
+            print ('Blacks turn!')
 
-    # print ("Selected piece", inputX, inputY )
+        print ('Select which piece to move')
+        inputX = MoveNumber ()
+        inputY = MoveLetter ()
 
-    print ('Select where to move')
-    outputX = MoveNumber ()
-    outputY = MoveLetter ()
+        # print ("Selected piece", inputX, inputY )
 
-    # print ("Selected piece", outputX, outputY )
-    SelectPiece(inputX, inputY, outputX, outputY, turn, game)
+        print ('Select where to move')
+        outputX = MoveNumber ()
+        outputY = MoveLetter ()
 
-    if turn == 0:
-        turn = 1
-    else:
-        turn = 0
-        
-    play(turn)
+        # print ("Selected piece", outputX, outputY )
+        if SelectPiece(inputX, inputY, outputX, outputY, turn, game):
+
+            if turn == 0:
+                turn = 1
+            else:
+                turn = 0
+                
+            continue
+
+        continue
 
 
 
@@ -82,37 +86,31 @@ def SelectPiece(inputX, inputY, outputX, outputY, turn, game):
             Moves = moves(piece, game)
             if not Moves[outputX][outputY]:
                 print ("That is not a possible move, try again!")
-                play (turn)
+                return False
 
             if turn != piece.colour:
                 print ("That is not your piece, try again!")
-                play (turn)
+                return False
 
             K  = taken (output, turn, game)
             if K == 0:
-                play(turn)
+                return False
 
             piece.coordinates = output
 
-            if turn == 0:
-                turn = 1
-            else:
-                turn = 0
-
             Moved = True
-            break
+            return True
     if Moved == False:
         print ('There is no piece there, try again!')
-    play(turn)
+    return False
 
 game = Game()
 
-while not game.over():
-    turn = 0
 
-    play(turn)
+turn = 0
 
-    break
+play(turn)
+
 
 
 
