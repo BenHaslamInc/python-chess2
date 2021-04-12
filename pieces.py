@@ -1,6 +1,7 @@
 from __future__ import annotations
 import numpy as np
 
+
 class Piece:
     def __init__(self: Piece) -> None:
         self.coordinates: tuple[int, int] = (0, 0)
@@ -19,12 +20,12 @@ class Pawn (Piece):
         self.type = 'WhitePawn'
 
 
-class Castle (Piece):
-    def __init__(self: Castle) -> None:
-        # General Castle rules
+class Rook (Piece):
+    def __init__(self: Rook) -> None:
+        # General Rook rules
         self.symbol = '| ♖  '
         self.colour = 0
-        self.type = 'Castle'
+        self.type = 'Rook'
 
 
 class Knight (Piece):
@@ -42,6 +43,7 @@ class Bishop (Piece):
         self.colour = 0
         self.type = 'Bishop'
 
+
 class King (Piece):
     def __init__(self: King) -> None:
         # General King rules
@@ -49,13 +51,14 @@ class King (Piece):
         self.colour = 0
         self.type = 'King'
 
+
 class Queen (Piece):
     def __init__(self: Queen) -> None:
         # General Queen rules
         self.symbol = '| ♕  '
         self.colour = 0
         self.type = 'Queen'
-    
+
 
 # The Blacks
 
@@ -66,11 +69,13 @@ class PawnBlack (Pawn):
         self.colour = 1
         self.type = 'BlackPawn'
 
-class CastleBlack (Castle):
-    def __init__(self: CastleBlack) -> None:
+
+class RookBlack (Rook):
+    def __init__(self: RookBlack) -> None:
         self.symbol = '| ♜  '
         self.colour = 1
-        self.type = 'Castle'
+        self.type = 'Rook'
+
 
 class KnightBlack (Knight):
     def __init__(self: KnightBlack) -> None:
@@ -78,17 +83,20 @@ class KnightBlack (Knight):
         self.colour = 1
         self.type = 'Knight'
 
+
 class BishopBlack (Bishop):
     def __init__(self: BishopBlack) -> None:
         self.symbol = '| ♝  '
         self.colour = 1
         self.type = 'Bishop'
 
+
 class KingBlack (King):
     def __init__(self: KingBlack) -> None:
         self.symbol = '| ♚  '
         self.colour = 1
         self.type = 'King'
+
 
 class QueenBlack (Queen):
     def __init__(self: QueenBlack) -> None:

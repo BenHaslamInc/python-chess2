@@ -1,3 +1,5 @@
 {
-    "python.pythonPath": "/home/benhaslam/Documents/python-chess/chess/bin/python3"
+    "python.pythonPath": "/home/benhaslam/Documents/python-chess/chess/bin/python3",
+    "python.linting.enabled": true,
+    "python.linting.lintOnSave": true
 }

@@ -8,10 +8,10 @@ from moves import moves
 def print_board(board: list[Piece]) -> None:
 
     # Build the board
-    BlankBoard = np.full((8,8), '|    ')
+    BlankBoard = np.full((8, 8), '|    ')
 
     for piece in game.board:
-        (X,Y) = piece.coordinates
+        (X, Y) = piece.coordinates
         BlankBoard[X][Y] = piece.symbol
 
     # Display the board
@@ -19,22 +19,21 @@ def print_board(board: list[Piece]) -> None:
     Y_Coordinates = "    A    B    C    D    E    F    G    H  "
 
     for piece in game.taken_blacks:
-        print (piece.symbol, end='')
-    print ('', end='\n')
+        print(piece.symbol, end='')
+    print('', end='\n')
     for piece in game.taken_whites:
-        print (piece.symbol, end='')
+        print(piece.symbol, end='')
 
-    print ('', end='\n')
-    print (Y_Coordinates, end='\n')
+    print('', end='\n')
+    print(Y_Coordinates, end='\n')
     K = 0
     for row in BlankBoard:
-        print ('', end='\n')
-        K+=1
-        print (K, end=' ')
+        print('', end='\n')
+        K += 1
+        print(K, end=' ')
         for collum in row:
-            print (collum, end='')
-        print ('|', end='\n')
-
+            print(collum, end='')
+        print('|', end='\n')
 
 
 def play(turn):
@@ -44,19 +43,19 @@ def play(turn):
         print_board(game.board)
 
         if turn == 0:
-            print ('White turn!')
+            print('White turn!')
         else:
-            print ('Blacks turn!')
+            print('Blacks turn!')
 
-        print ('Select which piece to move')
-        inputX = MoveNumber ()
-        inputY = MoveLetter ()
+        print('Select which piece to move')
+        inputX = MoveNumber()
+        inputY = MoveLetter()
 
         # print ("Selected piece", inputX, inputY )
 
-        print ('Select where to move')
-        outputX = MoveNumber ()
-        outputY = MoveLetter ()
+        print('Select where to move')
+        outputX = MoveNumber()
+        outputY = MoveLetter()
 
         # print ("Selected piece", outputX, outputY )
         if SelectPiece(inputX, inputY, outputX, outputY, turn, game):
@@ -65,34 +64,33 @@ def play(turn):
                 turn = 1
             else:
                 turn = 0
-                
+
             continue
 
         continue
 
 
-
 def SelectPiece(inputX, inputY, outputX, outputY, turn, game):
     Moved = False
     for piece in game.board:
-        (X,Y) = piece.coordinates
+        (X, Y) = piece.coordinates
         # print ('Piece coordinates: ', (X,Y))
         input = (int(inputX), int(inputY))
         # print ('input: ', input)
-        output = (int (outputX), int(outputY))
+        output = (int(outputX), int(outputY))
 
-        if (X,Y) == input:
-            
+        if (X, Y) == input:
+
             Moves = moves(piece, game)
             if not Moves[outputX][outputY]:
-                print ("That is not a possible move, try again!")
+                print("That is not a possible move, try again!")
                 return False
 
             if turn != piece.colour:
-                print ("That is not your piece, try again!")
+                print("That is not your piece, try again!")
                 return False
 
-            K  = taken (output, turn, game)
+            K = taken(output, turn, game)
             if K == 0:
                 return False
 
@@ -101,8 +99,9 @@ def SelectPiece(inputX, inputY, outputX, outputY, turn, game):
             Moved = True
             return True
     if Moved == False:
-        print ('There is no piece there, try again!')
+        print('There is no piece there, try again!')
     return False
+
 
 game = Game()
 
@@ -110,8 +109,3 @@ game = Game()
 turn = 0
 
 play(turn)
-
-
-
-
-

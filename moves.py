@@ -10,23 +10,63 @@ def board_limits(X, Y):
     else:
         return False
 
+
 def is_empty(X, Y, game: Game):
     for piece in game.board:
-        if (X,Y) == piece.coordinates:
+        if (X, Y) == piece.coordinates:
             return False
     return True
 
+
 def what_colour(X, Y, game: Game):
     for piece in game.board:
-        if (X,Y) == piece.coordinates:
+        if (X, Y) == piece.coordinates:
             return piece.colour
 
 
+def rook_moves(X, Y, piece, game: Game, BlankBoard):
+    if X < 7:
+        x = X+1
+        while x < 7 and is_empty(x, Y, game):
+            BlankBoard[x, Y] = True
+            print('X, Y = ', x, Y)
+            x += 1
+        if what_colour(x, Y, game) != piece.colour:
+            BlankBoard[x, Y] = True
 
-def moves (piece: Piece, game: Game):
-    (X,Y) = piece.coordinates
-    BlankBoard = np.full((8,8), False)
-    
+    if X > 0:
+        x = X-1
+        while x > -1 and is_empty(x, Y, game):
+            BlankBoard[x, Y] = True
+            x -= 1
+        if what_colour(x, Y, game) != piece.colour:
+            BlankBoard[x, Y] = True
+    print(BlankBoard)
+
+    if Y < 7:
+        y = Y+1
+        while y < 7 and is_empty(X, y, game):
+            BlankBoard[X, y] = True
+            print('X, Y = ', X, y)
+            y += 1
+        if what_colour(X, y, game) != piece.colour:
+            BlankBoard[X, y] = True
+
+    if Y > 0:
+        y = Y-1
+        while y > -1 and is_empty(X, y, game):
+            BlankBoard[X, y] = True
+            y -= 1
+        if what_colour(X, y, game) != piece.colour:
+            BlankBoard[X, y] = True
+
+    return BlankBoard
+
+
+def moves(piece: Piece, game: Game):
+    (X, Y) = piece.coordinates
+    BlankBoard = np.full((8, 8), False)
+
     if piece.type == 'WhitePawn' or piece.type == 'BlackPawn':
 
         if piece.colour == 0:
@@ -34,36 +74,39 @@ def moves (piece: Piece, game: Game):
         else:
             x = 1
 
-        if is_empty(X+x,Y, game):
+        if is_empty(X+x, Y, game):
             BlankBoard[X+x, Y] = True
-            print ('one')
-            print (X+x, Y)
+            print('one')
+            print(X+x, Y)
 
-        if not is_empty(X+x,Y+1, game):
-            if piece.colour != what_colour(X+x,Y+1, game):
-                BlankBoard[X+x,Y+1] = True
-        
-        if not is_empty(X+x,Y-1, game):
-            if piece.colour != what_colour(X+x,Y-1, game):
-                BlankBoard[X+x,Y-1] = True
+        if not is_empty(X+x, Y+1, game):
+            if piece.colour != what_colour(X+x, Y+1, game):
+                BlankBoard[X+x, Y+1] = True
+
+        if not is_empty(X+x, Y-1, game):
+            if piece.colour != what_colour(X+x, Y-1, game):
+                BlankBoard[X+x, Y-1] = True
 
         if X == 6 or X == 1:
-            if is_empty(X+x,Y, game) and is_empty(X+x*2,Y, game):
+            if is_empty(X+x, Y, game) and is_empty(X+x*2, Y, game):
                 BlankBoard[X+x*2, Y] = True
-                print ('two')
-                print (X+x, Y)
-        
-        if not is_empty(X+x*2,Y+1, game):
-            if piece.colour != what_colour(X+x*2,Y+1, game):
-                BlankBoard[X+x*2,Y+1] = True
-        
-        if not is_empty(X+x*2,Y-1, game):
-            if piece.colour != what_colour(X+x*2,Y-1, game):
-                BlankBoard[X+x*2,Y-1] = True
+                print('two')
+                print(X+x, Y)
+
+        if not is_empty(X+x*2, Y+1, game):
+            if piece.colour != what_colour(X+x*2, Y+1, game):
+                BlankBoard[X+x*2, Y+1] = True
+
+        if not is_empty(X+x*2, Y-1, game):
+            if piece.colour != what_colour(X+x*2, Y-1, game):
+                BlankBoard[X+x*2, Y-1] = True
+
+    elif piece.type == 'Rook':
+        BlankBoard == rook_moves(X, Y, piece, game, BlankBoard)
+
+        print(BlankBoard)
+
     else:
-        BlankBoard = np.full((8,8), True)
-    
+        BlankBoard = np.full((8, 8), True)
+
     return BlankBoard
-
-
-
