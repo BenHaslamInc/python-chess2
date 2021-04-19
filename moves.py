@@ -63,6 +63,55 @@ def rook_moves(X, Y, piece, game: Game, BlankBoard):
     return BlankBoard
 
 
+def bishop_rules(X, Y, piece, game: Game, BlankBoard):
+
+    if X < 7 and Y < 7:
+        x = X + 1
+        y = Y + 1
+        while x < 7 and y < 7 and is_empty(x, y, game):
+            BlankBoard[x, y] = True
+            print('X, Y = ', x, y)
+            x += 1
+            y += 1
+        if what_colour(x, Y, game) != piece.colour:
+            BlankBoard[x, y] = True
+
+    if X < 7 and Y > 0:
+        x = X + 1
+        y = Y - 1
+        while x < 7 and y > 0 and is_empty(x, y, game):
+            BlankBoard[x, y] = True
+            print('X, Y = ', x, y)
+            x += 1
+            y -= 1
+        if what_colour(x, Y, game) != piece.colour:
+            BlankBoard[x, y] = True
+
+    if X > 0 and Y > 0:
+        x = X - 1
+        y = Y - 1
+        while x > 0 and y > 0 and is_empty(x, y, game):
+            BlankBoard[x, y] = True
+            print('X, Y = ', x, y)
+            x -= 1
+            y -= 1
+        if what_colour(x, Y, game) != piece.colour:
+            BlankBoard[x, y] = True
+
+    if X > 0 and Y < 7:
+        x = X - 1
+        y = Y + 1
+        while x > 0 and y < 7 and is_empty(x, y, game):
+            BlankBoard[x, y] = True
+            print('X, Y = ', x, y)
+            x -= 1
+            y += 1
+        if what_colour(x, Y, game) != piece.colour:
+            BlankBoard[x, y] = True
+
+    return BlankBoard
+
+
 def moves(piece: Piece, game: Game):
     (X, Y) = piece.coordinates
     BlankBoard = np.full((8, 8), False)
@@ -104,6 +153,12 @@ def moves(piece: Piece, game: Game):
     elif piece.type == 'Rook':
         BlankBoard == rook_moves(X, Y, piece, game, BlankBoard)
 
+    elif piece.type == 'Bishop':
+        BlankBoard == bishop_rules(X, Y, piece, game, BlankBoard)
+
+    elif piece.type == 'Queen':
+        BlankBoard == rook_moves(X, Y, piece, game, BlankBoard)
+        BlankBoard == bishop_rules(X, Y, piece, game, BlankBoard)
         print(BlankBoard)
 
     else:
