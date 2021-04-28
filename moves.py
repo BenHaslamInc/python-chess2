@@ -24,6 +24,47 @@ def what_colour(X, Y, game: Game):
             return piece.colour
 
 
+def in_board(X, Y):
+    if (0 <= X <= 7) and (0 <= Y <= 7):
+        return True
+    else:
+        return False
+
+
+def pawn_moves(X, Y, piece, game: Game, BlankBoard):
+
+    if piece.colour == 0:
+        x = -1
+    else:
+        x = 1
+
+    if is_empty(X+x, Y, game):
+        BlankBoard[X+x, Y] = True
+        print(X+x, Y)
+
+    if not is_empty(X+x, Y+1, game):
+        if piece.colour != what_colour(X+x, Y+1, game):
+            BlankBoard[X+x, Y+1] = True
+
+    if not is_empty(X+x, Y-1, game):
+        if piece.colour != what_colour(X+x, Y-1, game):
+            BlankBoard[X+x, Y-1] = True
+
+    if X == 6 or X == 1:
+        if is_empty(X+x, Y, game) and is_empty(X+x*2, Y, game):
+            BlankBoard[X+x*2, Y] = True
+
+    if not is_empty(X+x*2, Y+1, game):
+        if piece.colour != what_colour(X+x*2, Y+1, game):
+            BlankBoard[X+x*2, Y+1] = True
+
+    if not is_empty(X+x*2, Y-1, game):
+        if piece.colour != what_colour(X+x*2, Y-1, game):
+            BlankBoard[X+x*2, Y-1] = True
+
+    return BlankBoard
+
+
 def rook_moves(X, Y, piece, game: Game, BlankBoard):
     if X < 7:
         x = X+1
@@ -41,7 +82,6 @@ def rook_moves(X, Y, piece, game: Game, BlankBoard):
             x -= 1
         if what_colour(x, Y, game) != piece.colour:
             BlankBoard[x, Y] = True
-    print(BlankBoard)
 
     if Y < 7:
         y = Y+1
@@ -63,14 +103,13 @@ def rook_moves(X, Y, piece, game: Game, BlankBoard):
     return BlankBoard
 
 
-def bishop_rules(X, Y, piece, game: Game, BlankBoard):
+def bishop_moves(X, Y, piece, game: Game, BlankBoard):
 
     if X < 7 and Y < 7:
         x = X + 1
         y = Y + 1
         while x < 7 and y < 7 and is_empty(x, y, game):
             BlankBoard[x, y] = True
-            print('X, Y = ', x, y)
             x += 1
             y += 1
         if what_colour(x, Y, game) != piece.colour:
@@ -81,7 +120,6 @@ def bishop_rules(X, Y, piece, game: Game, BlankBoard):
         y = Y - 1
         while x < 7 and y > 0 and is_empty(x, y, game):
             BlankBoard[x, y] = True
-            print('X, Y = ', x, y)
             x += 1
             y -= 1
         if what_colour(x, Y, game) != piece.colour:
@@ -92,7 +130,6 @@ def bishop_rules(X, Y, piece, game: Game, BlankBoard):
         y = Y - 1
         while x > 0 and y > 0 and is_empty(x, y, game):
             BlankBoard[x, y] = True
-            print('X, Y = ', x, y)
             x -= 1
             y -= 1
         if what_colour(x, Y, game) != piece.colour:
@@ -103,11 +140,74 @@ def bishop_rules(X, Y, piece, game: Game, BlankBoard):
         y = Y + 1
         while x > 0 and y < 7 and is_empty(x, y, game):
             BlankBoard[x, y] = True
-            print('X, Y = ', x, y)
             x -= 1
             y += 1
         if what_colour(x, Y, game) != piece.colour:
             BlankBoard[x, y] = True
+
+    return BlankBoard
+
+
+def free_space(X, Y, game: Game):
+    if is_empty(X, Y, game) and in_board(X, Y):
+        return True
+    return False
+
+
+def knight_moves(X, Y, game: Game, BlankBoard):
+
+    if free_space(X-1, Y-2, game):
+        BlankBoard[X-1, Y-2] = True
+
+    if free_space(X-2, Y-1, game):
+        BlankBoard[X-2, Y-1] = True
+
+    if free_space(X+1, Y-2, game):
+        BlankBoard[X+1, Y-2] = True
+
+    if free_space(X+2, Y-1, game):
+        BlankBoard[X+2, Y-1] = True
+
+    if free_space(X-1, Y+2, game):
+        BlankBoard[X-1, Y+2] = True
+
+    if free_space(X-2, Y+1, game):
+        BlankBoard[X-2, Y+1] = True
+
+    if free_space(X+1, Y+2, game):
+        BlankBoard[X+1, Y+2] = True
+
+    if free_space(X+2, Y+1, game):
+        BlankBoard[X+2, Y+1] = True
+
+    return BlankBoard
+
+
+def king_moves(X, Y, game: Game, BlankBoard):
+
+    if free_space(X+1, Y+1, game):
+        BlankBoard[X+1, Y+1] = True
+
+    if free_space(X+1, Y, game):
+        BlankBoard[X+1, Y] = True
+
+    if free_space(X+1, Y-1, game):
+        BlankBoard[X+1, Y-1] = True
+
+    if free_space(X, Y+1, game):
+        BlankBoard[X, Y+1] = True
+
+    if free_space(X, Y-1, game):
+        BlankBoard[X, Y-1] = True
+
+    if free_space(X-1, Y+1, game):
+        BlankBoard[X-1, Y+1] = True
+
+    if free_space(X-1, Y, game):
+        BlankBoard[X-1, Y] = True
+
+    if free_space(X-1, Y-1, game):
+        BlankBoard[X-1, Y-1] = True
 
     return BlankBoard
 
@@ -117,49 +217,23 @@ def moves(piece: Piece, game: Game):
     BlankBoard = np.full((8, 8), False)
 
     if piece.type == 'WhitePawn' or piece.type == 'BlackPawn':
-
-        if piece.colour == 0:
-            x = -1
-        else:
-            x = 1
-
-        if is_empty(X+x, Y, game):
-            BlankBoard[X+x, Y] = True
-            print('one')
-            print(X+x, Y)
-
-        if not is_empty(X+x, Y+1, game):
-            if piece.colour != what_colour(X+x, Y+1, game):
-                BlankBoard[X+x, Y+1] = True
-
-        if not is_empty(X+x, Y-1, game):
-            if piece.colour != what_colour(X+x, Y-1, game):
-                BlankBoard[X+x, Y-1] = True
-
-        if X == 6 or X == 1:
-            if is_empty(X+x, Y, game) and is_empty(X+x*2, Y, game):
-                BlankBoard[X+x*2, Y] = True
-                print('two')
-                print(X+x, Y)
-
-        if not is_empty(X+x*2, Y+1, game):
-            if piece.colour != what_colour(X+x*2, Y+1, game):
-                BlankBoard[X+x*2, Y+1] = True
-
-        if not is_empty(X+x*2, Y-1, game):
-            if piece.colour != what_colour(X+x*2, Y-1, game):
-                BlankBoard[X+x*2, Y-1] = True
+        BlankBoard == pawn_moves(X, Y, piece, game, BlankBoard)
 
     elif piece.type == 'Rook':
         BlankBoard == rook_moves(X, Y, piece, game, BlankBoard)
 
     elif piece.type == 'Bishop':
-        BlankBoard == bishop_rules(X, Y, piece, game, BlankBoard)
+        BlankBoard == bishop_moves(X, Y, piece, game, BlankBoard)
 
     elif piece.type == 'Queen':
         BlankBoard == rook_moves(X, Y, piece, game, BlankBoard)
-        BlankBoard == bishop_rules(X, Y, piece, game, BlankBoard)
-        print(BlankBoard)
+        BlankBoard == bishop_moves(X, Y, piece, game, BlankBoard)
+
+    elif piece.type == 'Knight':
+        BlankBoard == knight_moves(X, Y, game, BlankBoard)
+
+    elif piece.type == 'King':
+        BlankBoard == king_moves(X, Y, game, BlankBoard)
 
     else:
         BlankBoard = np.full((8, 8), True)
