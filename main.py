@@ -3,6 +3,7 @@ import numpy as np
 from setup import *
 from movement import *
 from moves import moves
+import copy
 
 
 def print_board(board: list[Piece]) -> None:
@@ -75,14 +76,15 @@ def play(turn):
 
 def SelectPiece(inputX, inputY, outputX, outputY, turn, game):
     Moved = False
-    for piece in game.board:
+    game_2 = copy.deepcopy(game)
+    for piece in game_2.board:
         (X, Y) = piece.coordinates
         input = (int(inputX), int(inputY))
         output = (int(outputX), int(outputY))
 
         if (X, Y) == input:
 
-            Moves = moves(piece, game)
+            Moves = moves(piece, game_2)
             if not Moves[outputX][outputY]:
                 print("That is not a possible move, try again!")
                 return False
@@ -91,10 +93,29 @@ def SelectPiece(inputX, inputY, outputX, outputY, turn, game):
                 print("That is not your piece, try again!")
                 return False
 
+            K = taken(output, turn, game_2)
+            if K == 0:
+                return False
+
+            piece.coordinates = output
+
+            # Check if your in check
+
+            if inCheck(turn, game_2):
+                print('This move puts you in check!')
+                return False
+
+            # If not in check, make the changes permenant
+
+            piece_index = game_2.board.index(piece)
+            print('piece index: ', piece_index)
+
             K = taken(output, turn, game)
             if K == 0:
                 return False
 
+            piece = game.board[piece_index]
+            print(piece)
             piece.coordinates = output
 
             Moved = True
