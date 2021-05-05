@@ -47,6 +47,9 @@ def play(turn):
         else:
             print('Blacks turn!')
 
+        if inCheck(turn, game):
+            print('You are in check, protect your king!')
+
         print('Select which piece to move')
         inputX = MoveNumber()
         inputY = MoveLetter()
@@ -74,9 +77,7 @@ def SelectPiece(inputX, inputY, outputX, outputY, turn, game):
     Moved = False
     for piece in game.board:
         (X, Y) = piece.coordinates
-        # print ('Piece coordinates: ', (X,Y))
         input = (int(inputX), int(inputY))
-        # print ('input: ', input)
         output = (int(outputX), int(outputY))
 
         if (X, Y) == input:
@@ -100,6 +101,23 @@ def SelectPiece(inputX, inputY, outputX, outputY, turn, game):
             return True
     if Moved == False:
         print('There is no piece there, try again!')
+    return False
+
+
+def inCheck(turn, game):
+
+    # Get king coordinates
+
+    for piece in game.board:
+        if piece.colour == turn and piece.type == 'King':
+            (X, Y) = piece.coordinates
+
+    for piece in game.board:
+        if piece.colour != turn:
+            piece_moves = moves(piece, game)
+            if piece_moves[X, Y]:
+                return True
+
     return False
 
 

@@ -40,7 +40,6 @@ def pawn_moves(X, Y, piece, game: Game, BlankBoard):
 
     if is_empty(X+x, Y, game):
         BlankBoard[X+x, Y] = True
-        print(X+x, Y)
 
     if not is_empty(X+x, Y+1, game):
         if piece.colour != what_colour(X+x, Y+1, game):
@@ -70,7 +69,6 @@ def rook_moves(X, Y, piece, game: Game, BlankBoard):
         x = X+1
         while x < 7 and is_empty(x, Y, game):
             BlankBoard[x, Y] = True
-            print('X, Y = ', x, Y)
             x += 1
         if what_colour(x, Y, game) != piece.colour:
             BlankBoard[x, Y] = True
@@ -87,7 +85,6 @@ def rook_moves(X, Y, piece, game: Game, BlankBoard):
         y = Y+1
         while y < 7 and is_empty(X, y, game):
             BlankBoard[X, y] = True
-            print('X, Y = ', X, y)
             y += 1
         if what_colour(X, y, game) != piece.colour:
             BlankBoard[X, y] = True
@@ -148,65 +145,65 @@ def bishop_moves(X, Y, piece, game: Game, BlankBoard):
     return BlankBoard
 
 
-def free_space(X, Y, game: Game):
-    if is_empty(X, Y, game) and in_board(X, Y):
+def free_space(X, Y, piece, game: Game):
+    if (is_empty(X, Y, game) or what_colour(X, Y, game) != piece.colour) and in_board(X, Y):
         return True
     return False
 
 
-def knight_moves(X, Y, game: Game, BlankBoard):
+def knight_moves(X, Y,  piece, game: Game, BlankBoard):
 
-    if free_space(X-1, Y-2, game):
+    if free_space(X-1, Y-2, piece, game):
         BlankBoard[X-1, Y-2] = True
 
-    if free_space(X-2, Y-1, game):
+    if free_space(X-2, Y-1, piece, game):
         BlankBoard[X-2, Y-1] = True
 
-    if free_space(X+1, Y-2, game):
+    if free_space(X+1, Y-2, piece, game):
         BlankBoard[X+1, Y-2] = True
 
-    if free_space(X+2, Y-1, game):
+    if free_space(X+2, Y-1, piece, game):
         BlankBoard[X+2, Y-1] = True
 
-    if free_space(X-1, Y+2, game):
+    if free_space(X-1, Y+2, piece, game):
         BlankBoard[X-1, Y+2] = True
 
-    if free_space(X-2, Y+1, game):
+    if free_space(X-2, Y+1, piece, game):
         BlankBoard[X-2, Y+1] = True
 
-    if free_space(X+1, Y+2, game):
+    if free_space(X+1, Y+2, piece, game):
         BlankBoard[X+1, Y+2] = True
 
-    if free_space(X+2, Y+1, game):
+    if free_space(X+2, Y+1, piece, game):
         BlankBoard[X+2, Y+1] = True
 
     return BlankBoard
 
 
-def king_moves(X, Y, game: Game, BlankBoard):
+def king_moves(X, Y,  piece, game: Game, BlankBoard):
 
-    if free_space(X+1, Y+1, game):
+    if free_space(X+1, Y+1, piece, game):
         BlankBoard[X+1, Y+1] = True
 
-    if free_space(X+1, Y, game):
+    if free_space(X+1, Y, piece, game):
         BlankBoard[X+1, Y] = True
 
-    if free_space(X+1, Y-1, game):
+    if free_space(X+1, Y-1, piece, game):
         BlankBoard[X+1, Y-1] = True
 
-    if free_space(X, Y+1, game):
+    if free_space(X, Y+1, piece, game):
         BlankBoard[X, Y+1] = True
 
-    if free_space(X, Y-1, game):
+    if free_space(X, Y-1, piece, game):
         BlankBoard[X, Y-1] = True
 
-    if free_space(X-1, Y+1, game):
+    if free_space(X-1, Y+1, piece, game):
         BlankBoard[X-1, Y+1] = True
 
-    if free_space(X-1, Y, game):
+    if free_space(X-1, Y, piece, game):
         BlankBoard[X-1, Y] = True
 
-    if free_space(X-1, Y-1, game):
+    if free_space(X-1, Y-1, piece, game):
         BlankBoard[X-1, Y-1] = True
 
     return BlankBoard
@@ -230,12 +227,9 @@ def moves(piece: Piece, game: Game):
         BlankBoard == bishop_moves(X, Y, piece, game, BlankBoard)
 
     elif piece.type == 'Knight':
-        BlankBoard == knight_moves(X, Y, game, BlankBoard)
+        BlankBoard == knight_moves(X, Y, piece, game, BlankBoard)
 
     elif piece.type == 'King':
-        BlankBoard == king_moves(X, Y, game, BlankBoard)
-
-    else:
-        BlankBoard = np.full((8, 8), True)
+        BlankBoard == king_moves(X, Y, piece, game, BlankBoard)
 
     return BlankBoard
