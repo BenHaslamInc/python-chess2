@@ -50,6 +50,8 @@ def play(turn):
 
         if inCheck(turn, game):
             print('You are in check, protect your king!')
+            if inCheckMate(turn, game):
+                break
 
         print('Select which piece to move')
         inputX = MoveNumber()
@@ -108,14 +110,12 @@ def SelectPiece(inputX, inputY, outputX, outputY, turn, game):
             # If not in check, make the changes permenant
 
             piece_index = game_2.board.index(piece)
-            print('piece index: ', piece_index)
 
             K = taken(output, turn, game)
             if K == 0:
                 return False
 
             piece = game.board[piece_index]
-            print(piece)
             piece.coordinates = output
 
             Moved = True
@@ -140,6 +140,30 @@ def inCheck(turn, game):
                 return True
 
     return False
+
+
+def inCheckMate(turn, game):
+
+    # Get king coordinates
+
+    for piece in game.board:
+        if piece.colour == turn and piece.type == 'King':
+            (X, Y) = piece.coordinates
+
+    for piece in game.board:
+        if piece.colour == turn:
+            piece_moves = moves(piece, game)
+            for x in range(8):
+                for y in range(8):
+                    if piece_moves[x, y]:
+                        game_2 = copy.deepcopy(game)
+                        piece_index = game.board.index(piece)
+                        piece_2 = game_2.board[piece_index]
+                        piece_2.coordinates = (x, y)
+                        if not inCheck(turn, game_2):
+                            return False
+
+    return True
 
 
 game = Game()
