@@ -11,5 +11,3 @@ pip install -r ./requirements.txt
 source chess/bin/activate
 
 python main.py
-
-work in progress
