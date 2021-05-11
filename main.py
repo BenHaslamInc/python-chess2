@@ -49,9 +49,18 @@ def play(turn):
             print('Blacks turn!')
 
         if inCheck(turn, game):
-            print('You are in check, protect your king!')
             if inCheckMate(turn, game):
+                print('Game Over')
+                if turn == 0:
+                    print('Black wins')
+                else:
+                    print('White wins')
                 break
+            print('You are in check, protect your king!')
+
+        if inCheckMate(turn, game):
+            print('Game Over')
+            print('Stalemate')
 
         print('Select which piece to move')
         inputX = MoveNumber()

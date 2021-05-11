@@ -59,20 +59,20 @@ def get_starting_pieces():
 
     # Remove pawns for testing:
 
-    for piece in list_of_pieces:
-        if piece.type == 'WhitePawn' or piece.type == 'BlackPawn':
-            list_of_pieces.remove(piece)
+    # for piece in list_of_pieces:
+    #     if piece.type == 'WhitePawn' or piece.type == 'BlackPawn':
+    #         list_of_pieces.remove(piece)
 
-    for piece in list_of_pieces:
-        if piece.type == 'WhitePawn' or piece.type == 'BlackPawn':
-            list_of_pieces.remove(piece)
+    # for piece in list_of_pieces:
+    #     if piece.type == 'WhitePawn' or piece.type == 'BlackPawn':
+    #         list_of_pieces.remove(piece)
 
-    for piece in list_of_pieces:
-        if piece.type == 'WhitePawn' or piece.type == 'BlackPawn':
-            list_of_pieces.remove(piece)
+    # for piece in list_of_pieces:
+    #     if piece.type == 'WhitePawn' or piece.type == 'BlackPawn':
+    #         list_of_pieces.remove(piece)
 
-    for piece in list_of_pieces:
-        if piece.type == 'WhitePawn' or piece.type == 'BlackPawn':
-            list_of_pieces.remove(piece)
+    # for piece in list_of_pieces:
+    #     if piece.type == 'WhitePawn' or piece.type == 'BlackPawn':
+    #         list_of_pieces.remove(piece)
 
     return list_of_pieces, taken_whites, taken_blacks
