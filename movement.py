@@ -43,7 +43,7 @@ def taken(output, turn, game):
         if (X, Y) == output:
             if piece.colour == turn:
                 print('You already have a piece there, try again!')
-                return 0
+                return False
             else:
                 if turn == 0:
                     game.taken_blacks.append(piece)
@@ -52,4 +52,4 @@ def taken(output, turn, game):
                     game.taken_whites.append(piece)
                     game.board.remove(piece)
 
-                return 1
+                return True

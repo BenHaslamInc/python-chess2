@@ -121,7 +121,7 @@ def SelectPiece(inputX, inputY, outputX, outputY, turn, game):
             piece_index = game_2.board.index(piece)
 
             K = taken(output, turn, game)
-            if K == 0:
+            if K == False:
                 return False
 
             piece = game.board[piece_index]
@@ -153,12 +153,6 @@ def inCheck(turn, game):
 
 def inCheckMate(turn, game):
 
-    # Get king coordinates
-
-    for piece in game.board:
-        if piece.colour == turn and piece.type == 'King':
-            (X, Y) = piece.coordinates
-
     for piece in game.board:
         if piece.colour == turn:
             piece_moves = moves(piece, game)
@@ -166,6 +160,7 @@ def inCheckMate(turn, game):
                 for y in range(8):
                     if piece_moves[x, y]:
                         game_2 = copy.deepcopy(game)
+                        K = taken((x, y), turn, game_2)
                         piece_index = game.board.index(piece)
                         piece_2 = game_2.board[piece_index]
                         piece_2.coordinates = (x, y)
