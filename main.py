@@ -66,7 +66,9 @@ def play(turn):
         inputX = MoveNumber()
         inputY = MoveLetter()
 
-        # print ("Selected piece", inputX, inputY )
+        if not CheckPiece (inputX, inputY, turn, game):
+            print ('You do not have a piece there!')
+            continue
 
         print('Select where to move')
         outputX = MoveNumber()
@@ -84,54 +86,66 @@ def play(turn):
 
         continue
 
+def CheckPiece(inputX, inputY, turn, game):
+    for piece in game.board:
+        (X, Y) = piece.coordinates
+        input = (int(inputX), int(inputY))
+        if (X, Y) == input and piece.colour == turn:
+                return True
+    return False
+
+
+def ChoosePiece(inputX, inputY, turn, game) -> Piece:
+    for piece in game.board:
+        (X, Y) = piece.coordinates
+        input = (int(inputX), int(inputY))
+        if (X, Y) == input and piece.colour == turn:
+                return piece
+    return game.board[0]
+    
 
 def SelectPiece(inputX, inputY, outputX, outputY, turn, game):
     Moved = False
+    output = (int(outputX), int(outputY))
     game_2 = copy.deepcopy(game)
-    for piece in game_2.board:
-        (X, Y) = piece.coordinates
-        input = (int(inputX), int(inputY))
-        output = (int(outputX), int(outputY))
+    piece_2 = ChoosePiece(inputX, inputY, turn, game_2)
+    (X, Y) = piece_2.coordinates
 
-        if (X, Y) == input:
+    Moves = moves(piece_2, game_2)
+    if not Moves[outputX][outputY]:
+        print("That is not a possible move, try again!")
+        return False
 
-            Moves = moves(piece, game_2)
-            if not Moves[outputX][outputY]:
-                print("That is not a possible move, try again!")
-                return False
+    if turn != piece_2.colour:
+        print("That is not your piece, try again!")
+        return False
 
-            if turn != piece.colour:
-                print("That is not your piece, try again!")
-                return False
+    K = taken(output, turn, game_2)
+    if K == 0:
+        return False
 
-            K = taken(output, turn, game_2)
-            if K == 0:
-                return False
+    piece_2.coordinates = output
 
-            piece.coordinates = output
+    # Check if your in check
 
-            # Check if your in check
+    if inCheck(turn, game_2):
+        print('This move puts you in check!')
+        return False
 
-            if inCheck(turn, game_2):
-                print('This move puts you in check!')
-                return False
+    # If not in check, make the changes permenant
 
-            # If not in check, make the changes permenant
+    piece_index = game_2.board.index(piece_2)
 
-            piece_index = game_2.board.index(piece)
+    K = taken(output, turn, game)
+    if K == False:
+        return False
 
-            K = taken(output, turn, game)
-            if K == False:
-                return False
+    piece = game.board[piece_index]
+    piece.coordinates = output
 
-            piece = game.board[piece_index]
-            piece.coordinates = output
+    Moved = True
+    return True
 
-            Moved = True
-            return True
-    if Moved == False:
-        print('There is no piece there, try again!')
-    return False
 
 
 def inCheck(turn, game):
