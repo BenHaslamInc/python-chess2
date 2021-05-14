@@ -1,4 +1,5 @@
-import numpy as np
+import copy
+from moves import *
 
 
 def ValidateNInput(N: str) -> int:
@@ -53,3 +54,55 @@ def taken(output, turn, game):
                     game.board.remove(piece)
 
                 return True
+
+def CheckPiece(inputX, inputY, turn, game):
+    for piece in game.board:
+        (X, Y) = piece.coordinates
+        input = (int(inputX), int(inputY))
+        if (X, Y) == input and piece.colour == turn:
+                return True
+    return False
+
+
+def ChoosePiece(inputX, inputY, turn, game) -> Piece:
+    for piece in game.board:
+        (X, Y) = piece.coordinates
+        input = (int(inputX), int(inputY))
+        if (X, Y) == input and piece.colour == turn:
+                return piece
+    return game.board[0]
+
+
+def inCheck(turn, game):
+
+    # Get king coordinates
+    for piece in game.board:
+        if piece.colour == turn and piece.type == 'King':
+            (X, Y) = piece.coordinates
+
+    for piece in game.board:
+        if piece.colour != turn:
+            piece_moves = moves(piece, game)
+            if piece_moves[X, Y]:
+                return True
+
+    return False
+
+
+def inCheckMate(turn, game):
+
+    for piece in game.board:
+        if piece.colour == turn:
+            piece_moves = moves(piece, game)
+            for x in range(8):
+                for y in range(8):
+                    if piece_moves[x, y]:
+                        game_2 = copy.deepcopy(game)
+                        K = taken((x, y), turn, game_2)
+                        piece_index = game.board.index(piece)
+                        piece_2 = game_2.board[piece_index]
+                        piece_2.coordinates = (x, y)
+                        if not inCheck(turn, game_2):
+                            return False
+
+    return True

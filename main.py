@@ -1,9 +1,5 @@
 from __future__ import annotations
-import numpy as np
-from setup import *
 from movement import *
-from moves import moves
-import copy
 
 
 def print_board(board: list[Piece]) -> None:
@@ -75,7 +71,7 @@ def play(turn):
         outputY = MoveLetter()
 
         # print ("Selected piece", outputX, outputY )
-        if SelectPiece(inputX, inputY, outputX, outputY, turn, game):
+        if MakeMove(inputX, inputY, outputX, outputY, turn, game):
 
             if turn == 0:
                 turn = 1
@@ -85,26 +81,9 @@ def play(turn):
             continue
 
         continue
-
-def CheckPiece(inputX, inputY, turn, game):
-    for piece in game.board:
-        (X, Y) = piece.coordinates
-        input = (int(inputX), int(inputY))
-        if (X, Y) == input and piece.colour == turn:
-                return True
-    return False
-
-
-def ChoosePiece(inputX, inputY, turn, game) -> Piece:
-    for piece in game.board:
-        (X, Y) = piece.coordinates
-        input = (int(inputX), int(inputY))
-        if (X, Y) == input and piece.colour == turn:
-                return piece
-    return game.board[0]
     
 
-def SelectPiece(inputX, inputY, outputX, outputY, turn, game):
+def MakeMove(inputX, inputY, outputX, outputY, turn, game):
     Moved = False
     output = (int(outputX), int(outputY))
     game_2 = copy.deepcopy(game)
@@ -147,46 +126,7 @@ def SelectPiece(inputX, inputY, outputX, outputY, turn, game):
     return True
 
 
-
-def inCheck(turn, game):
-
-    # Get king coordinates
-
-    for piece in game.board:
-        if piece.colour == turn and piece.type == 'King':
-            (X, Y) = piece.coordinates
-
-    for piece in game.board:
-        if piece.colour != turn:
-            piece_moves = moves(piece, game)
-            if piece_moves[X, Y]:
-                return True
-
-    return False
-
-
-def inCheckMate(turn, game):
-
-    for piece in game.board:
-        if piece.colour == turn:
-            piece_moves = moves(piece, game)
-            for x in range(8):
-                for y in range(8):
-                    if piece_moves[x, y]:
-                        game_2 = copy.deepcopy(game)
-                        K = taken((x, y), turn, game_2)
-                        piece_index = game.board.index(piece)
-                        piece_2 = game_2.board[piece_index]
-                        piece_2.coordinates = (x, y)
-                        if not inCheck(turn, game_2):
-                            return False
-
-    return True
-
-
 game = Game()
 
-
 turn = 0
-
 play(turn)
